@@ -1,90 +1,102 @@
 document.addEventListener('DOMContentLoaded', function(){
-    let addTask = document.querySelector(".btn-add");
+    let addTodo = document.querySelector(".add-todo");
         addMessage = document.getElementById("taskInput");
-        todoTask = document.querySelector("#taskList");
-        removeBtn = document.getElementById("clearCompleted");
-        allCheck = document.querySelector("#allChecked");
-        completedBtn = document.querySelector("#completed");
-        activeBtn = document.querySelector('#active');
-    let  todoList = [];
-    document.querySelector('#todoCount').innerText = count = 0 + ' ' + 'item left';
+        todoBox = document.querySelector("#todoBox");
+       
+    let todoList = [];
+        count = 0;
+    todoCount();
     if(localStorage.getItem('todoJson')) {
         todoList = JSON.parse(localStorage.getItem('todoJson'));
         displayMessages();
     };
-    addTask.addEventListener("click", function() {
-        if(addMessage.value == ' ' || addMessage.value == '') { 
-            return;
-        };
+    addTodo.addEventListener("click", function() {
+        if(addMessage.value == ' ' || addMessage.value == '') { return };
         let newTodo = {
             id: '',
             title: addMessage.value,
-            checked: false
+            checked: false,
+            hidden: false
         };
         todoList.unshift(newTodo);
         displayMessages();
-        localStorage.setItem('todoJson', JSON.stringify(todoList));
+        saveData();
         addMessage.value = '';       
     });
     function displayMessages() {
         let displayMessage = '';
         if(todoList.length === 0) {
-            todoTask.innerHTML = '';
+            todoBox.innerHTML = '';
         };
         todoList.forEach(function(item, i) {
             item.id = i + 1;
             displayMessage += `
-            <li class="task-item">
+            <li class="task-item ${item.hidden}" ${item.hidden ? "hidden" : ''}>
                 <input id="item_${item.id}" name="task"  class="checkbox" type="checkbox" ${item.checked ? "checked" : ''}>
                 <label for="item_${item.id}" class="todos">${item.title}</label>
             </li>
             `;
-            todoTask.innerHTML = displayMessage;
+            todoBox.innerHTML = displayMessage;
             count = item.id;
-            document.querySelector('#todoCount').innerText = count + ' ' + 'item left';
+            todoCount();
         });
     };
-    todoTask.addEventListener("change", function(event) {
+    todoBox.addEventListener("change", function(event) {
         let idInput = event.target.getAttribute('id');
-        let forLabel = todoTask.querySelector('[for=' + idInput + ']');
+        let forLabel = todoBox.querySelector('[for=' + idInput + ']');
         let valueLabel = forLabel.innerHTML;
         todoList.forEach(function(item) {
             if(item.title === valueLabel) {
                 item.checked = !item.checked;
-                localStorage.setItem('todoJson', JSON.stringify(todoList));
-                displayMessages();
             };
-        });
-    });
-    removeBtn.addEventListener('click', function() {
-        todoList.forEach((item, i) => {
-            if(item.checked) {
-                todoList.splice(i, 1);
-            };
-            localStorage.setItem('todoJson', JSON.stringify(todoList));
-            document.querySelector('#todoCount').innerText = count = 0 + ' ' + 'item left';
+            saveData();
             displayMessages();
         });
     });
-    completedBtn.addEventListener('click', function() {
-        todoList.forEach((item, i) => {
-            if(!item.checked) {
-                todoList.splice(i, 1);
-                displayMessages();
-            };
-        });   
+
+    let btnRemove = document.getElementById("btnRemove");
+        btnAll = document.querySelector("#btnAll");
+        btnCompleted = document.querySelector("#btnCompleted");
+        btnActive = document.querySelector('#btnActive');
+
+    btnAll.addEventListener('click', function() {
+        todoList.forEach(function(item) {
+            if(item.hidden) {
+                item.hidden = false;
+            }
+            saveData();
+            displayMessages();
+        })
+       
     });
-    activeBtn.addEventListener('click', function() {
+    btnRemove.addEventListener('click', function() {
         todoList.forEach((item, i) => {
             if(item.checked) {
                 todoList.splice(i, 1);
-                displayMessages();
-            };
+            }
+            saveData();
+            displayMessages();
         });
     });
-    allCheck.addEventListener('click', function() {
-        todoList = JSON.parse(localStorage.getItem('todoJson'));
-        displayMessages();
+    btnCompleted.addEventListener('click', function() {
+        todoList.forEach((item) => {
+            item.hidden = false;
+            if(!item.checked) {
+                item.hidden = true;
+            }
+            saveData();
+            displayMessages();
+        });   
+    });
+    btnActive.addEventListener('click', function() {
+        todoList.forEach((item) => {
+            item.hidden = false;
+            if(item.checked) {
+                item.hidden = true;
+            }
+            saveData();
+            displayMessages();
+        });
     });
     let btnFilter = document.querySelectorAll('.btn-filter');
     btnFilter.forEach(function(item) {
@@ -92,8 +104,13 @@ document.addEventListener('DOMContentLoaded', function(){
             btnFilter.forEach(function(item) {
                 item.classList.remove('selected');
             });
-            item.classList.add('selected');
-            
+            item.classList.add('selected');  
         });
     });
+    function saveData() {
+        localStorage.setItem('todoJson', JSON.stringify(todoList));
+    }
+    function todoCount() {
+        document.querySelector('#todoCount').innerText = count + ' ' + 'item left';
+    }
 });

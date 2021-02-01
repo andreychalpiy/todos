@@ -13,17 +13,17 @@
 
 <body>
     <div class="container" id="todoContainier">
-        <form id="todoApp" class="">
+        <form>
             <h1 class="header">todos</h1>
             <span class="border-header"></span>
             <div class="task-input">
-                <div class="btn-add">
+                <div class="add-todo">
                     <a><i class="fas fa-angle-double-down"></i></a>
                 </div>
                 <input id="taskInput" type="text" class="todo-input" placeholder="What needs to be done?" autofocus>
             </div>
         </form>
-        <ul id="taskList">
+        <ul id="todoBox">
 
         </ul>
         <span class="border-footer"></span>
@@ -31,16 +31,16 @@
             <span id="todoCount"></span>
             <ul class="filters">
                 <li>
-                    <a id="allChecked" class="btn-filter selected" href="#">All</a>
+                    <a id="btnAll" class="btn-filter selected" href="#">All</a>
                 </li>
                 <li>
-                    <a id="active" class="btn-filter" href="#">Active</a>
+                    <a id="btnActive" class="btn-filter" href="#">Active</a>
                 </li>
                 <li>
-                    <a id="completed" href="#" class="btn-filter">Completed</a>
+                    <a id="btnCompleted" href="#" class="btn-filter">Completed</a>
                 </li>
             </ul>
-            <div type="button" id="clearCompleted">Clear completed</div>
+            <div type="button" id="btnRemove">Clear completed</div>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
