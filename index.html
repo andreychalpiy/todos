@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./todoStyle.css">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="container" id="todoContainier">
+        <form id="todoApp" class="">
+            <h1 class="header">todos</h1>
+            <span class="border-header"></span>
+            <div class="task-input">
+                <div class="btn-add">
+                    <a><i class="fas fa-angle-double-down"></i></a>
+                </div>
+                <input id="taskInput" type="text" class="todo-input" placeholder="What needs to be done?" autofocus>
+            </div>
+        </form>
+        <ul id="taskList">
+
+        </ul>
+        <span class="border-footer"></span>
+        <div id="footer">
+            <span id="todoCount"></span>
+            <ul class="filters">
+                <li>
+                    <a id="allChecked" class="btn-filter selected" href="#">All</a>
+                </li>
+                <li>
+                    <a id="active" class="btn-filter" href="#">Active</a>
+                </li>
+                <li>
+                    <a id="completed" href="#" class="btn-filter">Completed</a>
+                </li>
+            </ul>
+            <div type="button" id="clearCompleted">Clear completed</div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://kit.fontawesome.com/4db6ef8562.js" crossorigin="anonymous"></script>
+    <script src="./appJS.js"></script>
+</body>
+
+</html>
