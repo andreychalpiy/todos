@@ -1,7 +1,6 @@
 body {
   margin: 100px;
   background: #e3e3e3;
-  font-size: 17px;
 }
 
 .container {
@@ -34,7 +33,10 @@ input.todos {
 .todo-input {
   display: block;
   width: 100%;
-  line-height: 3;
+  color: #685d57;
+  font-family: "Rubik", sans-serif;
+  font-size: 20px;
+  line-height: 2.5;
   border: none;
   padding-left: 15px;
   outline: none;
@@ -156,4 +158,9 @@ input[type="checkbox"]:checked + label::before {
 }
 .true {
   text-decoration: line-through !important;
+  color: #777575;
+}
+
+.true label {
+  color: #9f9f9f;
 }

@@ -10,37 +10,31 @@ document.addEventListener('DOMContentLoaded', function(){
         todoList = JSON.parse(localStorage.getItem('todoJson'));
         displayMessages();
     };
-    addTodo.addEventListener("click", function() {
-        if(addMessage.value == ' ' || addMessage.value == '') { return };
-        let newTodo = {
-            id: '',
-            title: addMessage.value,
-            checked: false
-        };
-        todoList.unshift(newTodo);
-        saveData();
-        displayMessages();
-        addMessage.value = '';       
+    addTodo.addEventListener("click", newTask);
+    addMessage.addEventListener("keyup", function(event) {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            addTodo.click(newTask);
+        }
     });
     function displayMessages() {
         let displayMessage = '';
         if(todoList.length === 0) {
             todoBox.innerHTML = '';
-            count = 0;
-            todoCount();
+           
         };
+        
         todoList.forEach(function(item, i) {
-            item.id = i + 1;
+            count = item.id = i + 1;
             displayMessage += `
-            <li class="task-item ${item.linethrough}" ${item.hidden ? "hidden" : ''} ${item.linethrough ? "linethrough" : ''} >
+            <li class="task-item ${item.checked}" ${item.hidden ? "hidden" : ''}>
                 <input id="item_${item.id}" name="task"  class="checkbox" type="checkbox" ${item.checked ? "checked" : ''}>
                 <label for="item_${item.id}" class="todos">${item.title}</label>
             </li>
             `;
             todoBox.innerHTML = displayMessage;
-            count = item.id;
-            todoCount();
         });
+        todoCount();
     };
     todoBox.addEventListener("change", function(event) {
         let idInput = event.target.getAttribute('id');
@@ -49,7 +43,6 @@ document.addEventListener('DOMContentLoaded', function(){
         todoList.forEach(function(item) {
             if(item.title === valueLabel) {
                 item.checked = !item.checked;
-                item.linethrough = !item.linethrough;
             };
             saveData();
             displayMessages();
@@ -92,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 todoList.splice(i, 1);
             }
         }
+        count = 0;
         todoCount();
         saveData();
         displayMessages();
@@ -105,6 +99,22 @@ document.addEventListener('DOMContentLoaded', function(){
             item.classList.add('selected');  
         });
     });
+
+    function newTask() {
+        if(!addMessage.value || addMessage.value == addMessage.value.trim().length) {
+            return addMessage.value = '';
+           };        
+       let newTodo = {
+           id: '',
+           title: addMessage.value,
+           checked: false
+       };
+       todoList.unshift(newTodo);
+       saveData();
+       displayMessages();
+       addMessage.value = ''; 
+    }
+
     function saveData() {
         localStorage.setItem('todoJson', JSON.stringify(todoList));
     }
