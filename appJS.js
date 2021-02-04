@@ -5,8 +5,10 @@ $(document).ready(function(){
     let btnRemove = $("#btnRemove");
     let currentFilter = 'all';  
     let todoList = [];
-        count = 0;
+    let count = 0;
+    let countComplet= 0;
     todoCount();
+    countCompleted();
     if(localStorage.getItem('todoJson')) {
         todoList = JSON.parse(localStorage.getItem('todoJson'));
         displayMessages();
@@ -36,6 +38,9 @@ $(document).ready(function(){
         count = todoList.filter(function(todoItem) {
             return !todoItem.checked;
         }).length;
+        countComplet = todoList.filter(function(todoItem) {
+            return todoItem.checked;
+        }).length;
         $.each(todoList, function(i, item) {
             let hidden = false;
             if(currentFilter == 'active' && item.checked) {
@@ -52,6 +57,7 @@ $(document).ready(function(){
         });
         todoBox.html(displayMessage);
         todoCount();
+        countCompleted()
     };
     $('#todoBox').on("click", '.task-item', function() {
         let id = $(this).attr('data-id');
@@ -64,6 +70,7 @@ $(document).ready(function(){
     })
     $('.toggle-filter').on("click", function(event) {
         event.preventDefault();
+        $(this).toggleClass('selected');
         currentFilter = $(this).attr('data-filter');
         displayMessages();
     })
@@ -71,23 +78,17 @@ $(document).ready(function(){
         todoList = todoList.filter(function(todoItem) {
             return !todoItem.checked;
         })
-        count = 0;
-        todoCount();
         saveData();
         displayMessages();
     });
-    document.querySelectorAll('.btn-filter').forEach(function(item) {
-        item.addEventListener('click', function() {
-            document.querySelectorAll('.btn-filter').forEach(function(item) {
-                item.classList.remove('selected');
-            });
-            item.classList.add('selected');  
-        });
-    });
     function saveData() {
         localStorage.setItem('todoJson', JSON.stringify(todoList));
-    }
+    };
     function todoCount() {
-        $('#todoCount').text(count + ' ' + 'item left');
-    }
+        $('#todoCount').text(`${count} item left`);
+    };
+    function countCompleted() {
+        btnRemove.text(`Clear completed (${countComplet})`)    
+    };
+    
 });
