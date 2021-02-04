@@ -1,8 +1,9 @@
-document.addEventListener('DOMContentLoaded', function(){
-    let addTodo = document.querySelector(".add-todo");
-        addMessage = document.getElementById("taskInput");
-        todoBox = document.querySelector("#todoBox");
-       
+$(document).ready(function(){
+    let addTodo = $(".add-todo");
+    let addMessage = $("#taskInput");
+    let todoBox = $("#todoBox");
+    let btnRemove = $("#btnRemove");
+    let currentFilter = 'all';  
     let todoList = [];
         count = 0;
     todoCount();
@@ -10,115 +11,83 @@ document.addEventListener('DOMContentLoaded', function(){
         todoList = JSON.parse(localStorage.getItem('todoJson'));
         displayMessages();
     };
-    addTodo.addEventListener("click", newTask);
-    addMessage.addEventListener("keyup", function(event) {
-        event.preventDefault();
-        if (event.keyCode === 13) {
-            addTodo.click(newTask);
+    addTodo.on("click", newTask);
+    addMessage.keypress(function(event) {
+        if (event.keyCode == '13') {
+            newTask();
         }
     });
-    function displayMessages() {
-        let displayMessage = '';
-        if(todoList.length === 0) {
-            todoBox.innerHTML = '';
-           
-        };
-        
-        todoList.forEach(function(item, i) {
-            count = item.id = i + 1;
-            displayMessage += `
-            <li class="task-item ${item.checked}" ${item.hidden ? "hidden" : ''}>
-                <input id="item_${item.id}" name="task"  class="checkbox" type="checkbox" ${item.checked ? "checked" : ''}>
-                <label for="item_${item.id}" class="todos">${item.title}</label>
-            </li>
-            `;
-            todoBox.innerHTML = displayMessage;
-        });
-        todoCount();
-    };
-    todoBox.addEventListener("change", function(event) {
-        let idInput = event.target.getAttribute('id');
-        let forLabel = todoBox.querySelector('[for=' + idInput + ']');
-        let valueLabel = forLabel.innerHTML;
-        todoList.forEach(function(item) {
-            if(item.title === valueLabel) {
-                item.checked = !item.checked;
-            };
-            saveData();
-            displayMessages();
-        });
-    });
-    let btnRemove = document.getElementById("btnRemove");
-        btnAll = document.querySelector("#btnAll");
-        btnCompleted = document.querySelector("#btnCompleted");
-        btnActive = document.querySelector('#btnActive');
-
-    btnAll.addEventListener('click', function() {
-        todoList.forEach(function(item) {
-            if(item.hidden) {
-                item.hidden = false;
-            }
-            displayMessages();
-        })
-    });
-    btnCompleted.addEventListener('click', function() {
-        todoList.forEach((item) => {
-            item.hidden = false;
-            if(!item.checked) {
-                item.hidden = true;
-            }
-            displayMessages();
-        });   
-    });
-    btnActive.addEventListener('click', function() {
-        todoList.forEach((item) => {
-            item.hidden = false;
-            if(item.checked) {
-                item.hidden = true;
-            }
-            displayMessages();
-        });
-    });
-    btnRemove.addEventListener('click', function() {
-        for(let i = 0; i < todoList.length; i++) {
-            while(todoList[i].checked == true) {
-                todoList.splice(i, 1);
-            }
-        }
-        count = 0;
-        todoCount();
-        saveData();
-        displayMessages();
-    });
-    let btnFilter = document.querySelectorAll('.btn-filter');
-    btnFilter.forEach(function(item) {
-        item.addEventListener('click', function() {
-            btnFilter.forEach(function(item) {
-                item.classList.remove('selected');
-            });
-            item.classList.add('selected');  
-        });
-    });
-
     function newTask() {
-        if(!addMessage.value || addMessage.value == addMessage.value.trim().length) {
-            return addMessage.value = '';
+        if(addMessage.val().trim() == '') {
+            return addMessage.val('');
            };        
        let newTodo = {
-           id: '',
-           title: addMessage.value,
+           id: todoList.length + 1,
+           title: addMessage.val(),
            checked: false
        };
        todoList.unshift(newTodo);
        saveData();
        displayMessages();
-       addMessage.value = ''; 
+       addMessage.val(''); 
     }
-
+    function displayMessages() {
+        let displayMessage = '';
+        count = todoList.filter(function(todoItem) {
+            return !todoItem.checked;
+        }).length;
+        $.each(todoList, function(i, item) {
+            let hidden = false;
+            if(currentFilter == 'active' && item.checked) {
+                hidden = true;
+            }else if(currentFilter == 'completed' && !item.checked) {
+                hidden = true;
+            }
+            displayMessage += `
+            <li data-id="${item.id}" class="task-item ${item.checked ? "line-through" : ''} ${hidden ? "hidden" : ''}">
+                <input id="item_${item.id}" name="task"  class="checkbox" type="checkbox" ${item.checked ? "checked" : ''}>
+                <label for="item_${item.id}" class="todos">${item.title}</label>
+            </li>
+            `;
+        });
+        todoBox.html(displayMessage);
+        todoCount();
+    };
+    $('#todoBox').on("click", '.task-item', function() {
+        let id = $(this).attr('data-id');
+        let i = todoList.findIndex(function(todoItem) {
+            return todoItem.id == id;
+        })
+        todoList[i].checked = !todoList[i].checked;
+        saveData();
+        displayMessages();
+    })
+    $('.toggle-filter').on("click", function(event) {
+        event.preventDefault();
+        currentFilter = $(this).attr('data-filter');
+        displayMessages();
+    })
+    btnRemove.on('click', function() {
+        todoList = todoList.filter(function(todoItem) {
+            return !todoItem.checked;
+        })
+        count = 0;
+        todoCount();
+        saveData();
+        displayMessages();
+    });
+    document.querySelectorAll('.btn-filter').forEach(function(item) {
+        item.addEventListener('click', function() {
+            document.querySelectorAll('.btn-filter').forEach(function(item) {
+                item.classList.remove('selected');
+            });
+            item.classList.add('selected');  
+        });
+    });
     function saveData() {
         localStorage.setItem('todoJson', JSON.stringify(todoList));
     }
     function todoCount() {
-        document.querySelector('#todoCount').innerText = count + ' ' + 'item left';
+        $('#todoCount').text(count + ' ' + 'item left');
     }
 });
