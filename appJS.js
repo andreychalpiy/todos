@@ -57,7 +57,7 @@ $(document).ready(function(){
         });
         todoBox.html(displayMessage);
         todoCount();
-        countCompleted()
+        countCompleted();
     };
     $('#todoBox').on("click", '.task-item', function() {
         let id = $(this).attr('data-id');
@@ -90,5 +90,4 @@ $(document).ready(function(){
     function countCompleted() {
         btnRemove.text(`Clear completed (${countComplet})`)    
     };
-    
 });
