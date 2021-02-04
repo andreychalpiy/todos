@@ -111,3 +111,29 @@ let users = [
     },
 ];
 
+function getFirstNames() { 
+    return users.map(function(user){
+       return user.name.split(' ')[0];
+    })
+}
+function getFirstNames() { 
+    return users.map(function(user){
+       return user.name.split(' ')[1];
+    })
+}
+function sortByDesc() {
+    return users.sort(function(a, b) {
+        if(a.id < b.id) return 1;
+        if(a.id > b.id) return -1;
+        if(a.id === b.id) return 0;
+
+   }) 
+}
+function directorsAgeSum() {
+    let sumAge = users.filter(function(user) {
+        return user.director;
+    }).reduce((prev, item) => {
+        return prev + item.age;
+    },0);
+    return sumAge;
+}
