@@ -151,3 +151,8 @@ function averageStaffAge() {
     },0)
     return sum / notDerector.length;
 }
+function getCompanyUsers(companyId){
+    return users.filter(function(user) {
+        return user.company.id === companyId;
+    })
+}
