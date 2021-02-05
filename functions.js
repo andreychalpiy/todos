@@ -142,3 +142,12 @@ function filterAge(minAge, maxAge) {
         return user.age >= minAge && user.age <= maxAge;
     })
 }
+function averageStaffAge() {
+    let notDerector =  users.filter(function(user) {
+        return !user.director;
+    })
+    let sum = notDerector.reduce((prev, user) => {
+        return prev + user.age;
+    },0)
+    return sum / notDerector.length;
+}
