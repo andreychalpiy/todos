@@ -116,7 +116,7 @@ function getFirstNames() {
        return user.name.split(' ')[0];
     })
 }
-function getFirstNames() { 
+function getLastNames() { 
     return users.map(function(user){
        return user.name.split(' ')[1];
     })
@@ -136,4 +136,9 @@ function directorsAgeSum() {
         return prev + item.age;
     },0);
     return sumAge;
+}
+function filterAge(minAge, maxAge) {
+    return users.filter(function(user) {
+        return user.age >= minAge && user.age <= maxAge;
+    })
 }
