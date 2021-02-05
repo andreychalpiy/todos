@@ -110,17 +110,41 @@ let users = [
         }
     },
 ];
-
+let userSettings = [
+    {
+        "user_id": 1,
+        "settings": {"theme": "black"},
+    },
+    {
+        "user_id": 3,
+        "settings": {"theme": "purple"},
+    },
+    {
+        "user_id": 7,
+        "settings": {"theme": "default"},
+    },
+    {
+        "user_id": 6,
+        "settings": {"theme": "default"},
+    },
+    {
+        "user_id": 10,
+        "settings": {"theme": "black"},
+    }
+];
+// 7. function getFirstNames() -> return all users first names ['Leanne', 'Ervin',...]
 function getFirstNames() { 
     return users.map(function(user){
        return user.name.split(' ')[0];
     })
 }
+// 8. function getLastNames() -> return all users last names ['Graham', 'Howell',...]
 function getLastNames() { 
     return users.map(function(user){
        return user.name.split(' ')[1];
     })
 }
+// 1. function sortByDesc(sort) -> will sort list by id in descending order
 function sortByDesc() {
     return users.sort(function(a, b) {
         if(a.id < b.id) return 1;
@@ -129,6 +153,7 @@ function sortByDesc() {
 
    }) 
 }
+// 3. function directorsAgeSum() -> return sum of ages where director=true
 function directorsAgeSum() {
     let sumAge = users.filter(function(user) {
         return user.director;
@@ -137,11 +162,13 @@ function directorsAgeSum() {
     },0);
     return sumAge;
 }
+// 2. function filterAge(minAge, maxAge) -> return list where age >= minAge and age <= maxAge
 function filterAge(minAge, maxAge) {
     return users.filter(function(user) {
         return user.age >= minAge && user.age <= maxAge;
     })
 }
+// 4. function averageStaffAge() -> return average age for users where director=false
 function averageStaffAge() {
     let notDerector =  users.filter(function(user) {
         return !user.director;
@@ -151,8 +178,17 @@ function averageStaffAge() {
     },0)
     return sum / notDerector.length;
 }
+// 5. function getCompanyUsers(companyId) -> return users where company id = companyId
 function getCompanyUsers(companyId){
     return users.filter(function(user) {
         return user.company.id === companyId;
     })
 }
+// 10. function maxUserAge() -> return max user age
+function maxUserAge() {
+    let arr = users.map(function(user) {
+        return user.age;
+    })
+    return Math.max(...arr) 
+}
+
