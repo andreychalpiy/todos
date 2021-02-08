@@ -208,3 +208,12 @@ function groupByCompany() {
     let uniq = {}
     return companies.filter(obj => !uniq[obj.id] && (uniq[obj.id] = true));
 }
+// 12. function sortByUsersCount() -> return (sorted by count of users) result from function groupByCompany()
+function sortByUsersCount() {
+    return groupByCompany().sort(function (a, b) {
+        if (a.users > b.users) return 1;
+        if (a.users < b.users) return -1;
+        if (a.users === b.users) return 0;
+    })
+}
+
