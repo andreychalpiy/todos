@@ -222,5 +222,12 @@ function biggestCompanyName() {
         if (a.users.length < b.users.length) return 1;
         if (a.users.length > b.users.length) return -1;
         if (a.users.length === b.users.length) return 0;
-    }).splice(0, 1).map((elem) => (elem.name)).toString();
+    }).splice(0, 1)[0].name
+}
+console.log(getCompaniesNameWithUsersCount())
+// 13. function getCompaniesNameWithUsersCount() -> return new list [company_name: users_count,...] example ['Yodah': 3, 'Soundtesting': 2,...]
+function getCompaniesNameWithUsersCount() {
+    return groupByCompany().map((item) => {
+        return item.name + ': ' + item.users.length;
+    })
 }
