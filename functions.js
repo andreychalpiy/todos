@@ -211,17 +211,16 @@ function groupByCompany() {
 // 12. function sortByUsersCount() -> return (sorted by count of users) result from function groupByCompany()
 function sortByUsersCount() {
     return groupByCompany().sort(function (a, b) {
-        if (a.users > b.users) return 1;
-        if (a.users < b.users) return -1;
-        if (a.users === b.users) return 0;
+        if (a.users.length > b.users.length) return 1;
+        if (a.users.length < b.users.length) return -1;
+        if (a.users.length === b.users.length) return 0;
     })
 }
 // 11. function biggestCompanyName() -> return the company name with the most users
 function biggestCompanyName() {
     return groupByCompany().sort(function (a, b) {
-        if (a.users < b.users) return 1;
-        if (a.users > b.users) return -1;
-        if (a.users === b.users) return 0;
-    }).splice(0, 1)
+        if (a.users.length < b.users.length) return 1;
+        if (a.users.length > b.users.length) return -1;
+        if (a.users.length === b.users.length) return 0;
+    }).splice(0, 1).map((elem) => (elem.name)).toString();
 }
-
