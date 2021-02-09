@@ -224,10 +224,36 @@ function biggestCompanyName() {
         if (a.users.length === b.users.length) return 0;
     }).splice(0, 1)[0].name
 }
-console.log(getCompaniesNameWithUsersCount())
+// 14. function usersWithSettings() -> return all users with added user settings, if no settings add empty settings settings:{}
+function usersWithSettings() {
+    let usersWithSettings = users.map(function (user) {
+        user.settings = {};
+        return Object.assign({}, user)
+    })
+    userSettings.filter(function (user) {
+        usersWithSettings.filter(function (item) {
+            if (item.id === user.user_id) {
+                item.settings = user.settings;
+            }
+        })
+    });
+    return usersWithSettings;
+}
+// 15. function getUsersByTheme(theme) -> return all users where settings.theme = theme
+function getUsersByTheme(theme) {
+    return usersWithSettings().filter(function (user) {
+        return user.settings;
+    }).filter(function (user) {
+        return user.settings.theme === theme;
+    })
+}
 // 13. function getCompaniesNameWithUsersCount() -> return new list [company_name: users_count,...] example ['Yodah': 3, 'Soundtesting': 2,...]
 function getCompaniesNameWithUsersCount() {
-    return groupByCompany().map((item) => {
-        return item.name + ': ' + item.users.length;
-    })
+    let data = groupByCompany();
+    let obj = [];
+    data.forEach(function (elem, i) {
+        obj += `'${elem.name}': ${data[i].users.length};`;
+
+    });
+    return Array(obj);
 }
