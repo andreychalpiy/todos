@@ -226,34 +226,37 @@ function biggestCompanyName() {
 }
 // 14. function usersWithSettings() -> return all users with added user settings, if no settings add empty settings settings:{}
 function usersWithSettings() {
-    let usersWithSettings = users.map(function (user) {
-        user.settings = {};
-        return Object.assign({}, user)
-    })
-    userSettings.filter(function (user) {
-        usersWithSettings.filter(function (item) {
-            if (item.id === user.user_id) {
-                item.settings = user.settings;
+    return users.map(function (user) {
+        return Object.assign({}, user);
+    }).map(function (user) {
+        userSettings.findIndex(function (userSetting) {
+            if (user.id === userSetting.user_id) {
+                return user.settings = userSetting.settings;
             }
-        })
+            user.settings = Object();
+        });
+        return user;
     });
-    return usersWithSettings;
 }
 // 15. function getUsersByTheme(theme) -> return all users where settings.theme = theme
 function getUsersByTheme(theme) {
     return usersWithSettings().filter(function (user) {
-        return user.settings;
-    }).filter(function (user) {
         return user.settings.theme === theme;
     })
 }
-// 13. function getCompaniesNameWithUsersCount() -> return new list [company_name: users_count,...] example ['Yodah': 3, 'Soundtesting': 2,...]
-function getCompaniesNameWithUsersCount() {
-    let data = groupByCompany();
-    let obj = [];
-    data.forEach(function (elem, i) {
-        obj += `'${elem.name}': ${data[i].users.length};`;
-
-    });
-    return Array(obj);
+// 9. function groupByTitle() -> return list of titles with users list
+function groupByTitle() {
+    return users.map(function (user) {
+        return user.title;
+    }).map(function (title) {
+        return Object.assign({ title })
+    }).filter(function (val, index, arr) {
+        return arr.findIndex(function (item) {
+            return val.title === item.title;
+        }) === index;
+    }).filter(function (item) {
+        return item.users = users.filter(function (user) {
+            return user.title === item.title;
+        })
+    })
 }
