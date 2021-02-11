@@ -155,12 +155,11 @@ function sortByDesc() {
 }
 // 3. function directorsAgeSum() -> return sum of ages where director=true
 function directorsAgeSum() {
-    let sumAge = users.filter(function (user) {
+    return users.filter(function (user) {
         return user.director;
-    }).reduce((prev, item) => {
+    }).reduce(function (prev, item) {
         return prev + item.age;
     }, 0);
-    return sumAge;
 }
 // 2. function filterAge(minAge, maxAge) -> return list where age >= minAge and age <= maxAge
 function filterAge(minAge, maxAge) {
@@ -229,11 +228,11 @@ function usersWithSettings() {
     return users.map(function (user) {
         return Object.assign({}, user);
     }).map(function (user) {
-        userSettings.findIndex(function (userSetting) {
+        userSettings.find(function (userSetting) {
             if (user.id === userSetting.user_id) {
                 return user.settings = userSetting.settings;
             }
-            user.settings = Object();
+            user.settings = {};
         });
         return user;
     });
@@ -255,8 +254,23 @@ function groupByTitle() {
             return val.title === item.title;
         }) === index;
     }).filter(function (item) {
-        return item.users = users.filter(function (user) {
-            return user.title === item.title;
-        })
+        return item.users = getTitleUsers(item.title)
     })
+}
+// return users title
+function getTitleUsers(title) {
+    return users.filter(function (user) {
+        return user.title === title;
+    })
+}
+console.log(getTitleUsers());
+// 13. function getCompaniesNameWithUsersCount() -> return new list [company_name: users_count,...] example ['Yodah': 3, 'Soundtesting': 2,...]
+function getCompaniesNameWithUsersCount() {
+    let result = {};
+    groupByCompany().map(function (item) {
+        return item.name + ': ' + item.users.length;
+    }).forEach(function (str, index) {
+        result[index] = str;
+    })
+    return result;
 }
