@@ -192,20 +192,20 @@ function maxUserAge() {
 }
 //6. function groupByCompany() -> return list of companies with users
 function groupByCompany() {
-    let companies = users.map(function (user) {
-        let company = Object.assign({}, user.company);
-        company.users = getCompanyUsers(company.id);
-        let usersCompany = company.users.map(function (user) {
+    return users.map(function (user) {
+        return Object.assign({}, user.company);
+    }).filter(function (value, index, self) {
+        return self.findIndex(function (item) {
+            return value.id === item.id;
+        }) === index;
+    }).map(function (company) {
+        company.users = getCompanyUsers(company.id).map(function (user) {
             let copyUsers = Object.assign({}, user);
             delete copyUsers.company;
             return copyUsers;
         })
-        company.users = usersCompany;
         return company;
     })
-    // return Object.values(companies.reduce((acc, current) => Object.assign(acc, { [current.id]: current }), {}));
-    let uniq = {}
-    return companies.filter(obj => !uniq[obj.id] && (uniq[obj.id] = true));
 }
 // 12. function sortByUsersCount() -> return (sorted by count of users) result from function groupByCompany()
 function sortByUsersCount() {
@@ -228,14 +228,19 @@ function usersWithSettings() {
     return users.map(function (user) {
         return Object.assign({}, user);
     }).map(function (user) {
-        userSettings.find(function (userSetting) {
-            if (user.id === userSetting.user_id) {
-                return user.settings = userSetting.settings;
-            }
-            user.settings = {};
-        });
+        user.settings = getUserSettings(user.id).map(function (user) {
+            let setting = Object.assign(user.settings)
+            delete setting.user_id;
+            return setting;
+        })
         return user;
     });
+}
+//return user settings
+function getUserSettings(userId) {
+    return userSettings.filter(function (user) {
+        return user.user_id === userId;
+    })
 }
 // 15. function getUsersByTheme(theme) -> return all users where settings.theme = theme
 function getUsersByTheme(theme) {
@@ -243,6 +248,7 @@ function getUsersByTheme(theme) {
         return user.settings.theme === theme;
     })
 }
+console.log(getCompaniesNameWithUsersCount())
 // 9. function groupByTitle() -> return list of titles with users list
 function groupByTitle() {
     return users.map(function (user) {
@@ -253,8 +259,9 @@ function groupByTitle() {
         return arr.findIndex(function (item) {
             return val.title === item.title;
         }) === index;
-    }).filter(function (item) {
-        return item.users = getTitleUsers(item.title)
+    }).map(function (item) {
+        item.users = getTitleUsers(item.title)
+        return Object.assign({}, item)
     })
 }
 // return users title
@@ -263,14 +270,21 @@ function getTitleUsers(title) {
         return user.title === title;
     })
 }
-console.log(getTitleUsers());
-// 13. function getCompaniesNameWithUsersCount() -> return new list [company_name: users_count,...] example ['Yodah': 3, 'Soundtesting': 2,...]
+// 13. function getCompaniesNameWithUsersCount() -> return new list {company_name: users_count,...} example {'Yodah': 3, 'Soundtesting': 2,...}
 function getCompaniesNameWithUsersCount() {
-    let result = {};
-    groupByCompany().map(function (item) {
-        return item.name + ': ' + item.users.length;
-    }).forEach(function (str, index) {
-        result[index] = str;
+    let arr = {};
+    groupByCompany().forEach(function (item) {
+        arr[item.name] = item.users.length;
     })
-    return result;
+    return arr
 }
+
+
+// let arr = {};
+// arr = groupByCompany().map(function (item) {
+//     return { [item.name]: item.users.length };
+// }).forEach(function (item) {
+//     return Object.assign({}, item)
+
+// })
+// return arr
