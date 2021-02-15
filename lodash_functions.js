@@ -158,8 +158,9 @@ function directorsAgeSum() {
 }
 // 1. function sortByDesc(sort) -> will sort list by id in descending order
 function sortByDesc() {
-    return _.reverse(_.sortBy(users, 'age'));
+    return _.orderBy(users, ['age'], ['desc']);
 }
+// return _.reverse(_.sortBy(users, 'age'));
 // 4. function averageStaffAge() -> return average age for users where director=false
 function averageStaffAge() {
     return _.sumBy(getUsersByDirector(false), 'age') / _.size(getUsersByDirector(false));
@@ -218,7 +219,7 @@ function getTitleUsers(title) {
 // 2. function filterAge(minAge, maxAge) -> return list where age >= minAge and age <= maxAge
 function filterAge(minAge, maxAge) {
     return _.filter(users, function (user) {
-        return user.age >= minAge && user.age <= maxAge
+        return _.inRange(user.age, minAge, maxAge);
     });
 }
 // 13. function getCompaniesNameWithUsersCount() -> return new list {company_name: users_count,...} example {'Yodah': 3, 'Soundtesting': 2,...}
@@ -227,5 +228,4 @@ function getCompaniesNameWithUsersCount() {
     _.each(groupByCompany(), function (item) {
         arr[item.name] = item.users.length;
     })
-    return arr;
 }
